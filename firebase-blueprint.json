@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "DoomParticipant": {
+      "title": "Doom Participant",
+      "description": "A team member on the Dooms Month leaderboard with their current Doom Points score.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Participant display name."
+        },
+        "points": {
+          "type": "integer",
+          "description": "Current Doom Points score (-999 to 9999)."
+        },
+        "note": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80,
+          "description": "Optional short note describing the latest point change."
+        },
+        "createdBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128,
+          "description": "UID of the organizer who created the entry."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the participant was added."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the latest point or profile update."
+        }
+      },
+      "required": ["name", "points", "createdBy", "createdAt", "updatedAt"]
+    },
+    "AdminUser": {
+      "title": "Admin User",
+      "description": "Authorized organizer UID permitted to manage Doom Points.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Organizer email address."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when admin access was granted."
+        }
+      },
+      "required": ["email", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/doomParticipants/{participantId}": {
+      "schema": {
+        "$ref": "#/entities/DoomParticipant"
+      },
+      "description": "Publicly readable Dooms Month leaderboard entries; writable only by verified organizers."
+    },
+    "/admins/{uid}": {
+      "schema": {
+        "$ref": "#/entities/AdminUser"
+      },
+      "description": "Authorized organizer documents."
+    }
+  }
+}
